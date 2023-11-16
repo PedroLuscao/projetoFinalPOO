@@ -1,7 +1,12 @@
 package model;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ControleLancamento {
     
@@ -16,7 +21,24 @@ public class ControleLancamento {
     }
 
     public void addListaLancamentos(Lancamento l){
-        listaLancamentos.add(l);
+        
+        try(Scanner lancamentosTexto = new Scanner (new File("Trabalho.csv", "UTF-8"))){
+            lancamentosTexto.nextLine();
+            while(true){
+                String textoCompleto = lancamentosTexto.nextLine();
+                String[] split = textoCompleto.split(";");
+                if(split[0].equals("RECEITA")){
+                    listaLancamentos.add(new Receita(Double.parseDouble(split[3]), LocalDate.parse(split[2]), TipoReceita.valueOf(split[1])));
+                }
+                
+                if(split[0].equals("DESPESA")){
+                    listaLancamentos.add(new Despesa(Double.parseDouble(split[3]), LocalDate.parse(split[2]), TipoDespesa.valueOf(split[1])));
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ControleLancamento.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     public double calcularSaldo(){
