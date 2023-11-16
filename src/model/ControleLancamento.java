@@ -15,7 +15,7 @@ public class ControleLancamento {
     }
 
     public void addListaLancamentos(Lancamento l){
-        addListaLancamentos(l);
+        listaLancamentos.add(l);
     }
 
     public double calcularSaldo(){

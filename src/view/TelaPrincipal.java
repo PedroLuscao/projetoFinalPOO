@@ -23,10 +23,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
      */
     public TelaPrincipal() {
         initComponents();
-        addRowsToJTable();
+        atualizarTabela();
     }
     
-    public void addRowsToJTable(){
+    public void atualizarTabela(){
         ControleLancamento control = new ControleLancamento();
         
         Receita receita1 = new Receita(100.0, LocalDate.now(), TipoReceita.SALARIO);
@@ -40,7 +40,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         control.addListaLancamentos(despesa2);
         
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        Object rowData[] = new Object[3];
+        Object rowData[] = new Object[4];
         for(int i = 0; i < control.getListaLancamentos().size(); i++){
             if (control.getListaLancamentos().get(i) instanceof Receita){
                 rowData[0] = "Receita";
@@ -97,10 +97,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Origem", "Valor", "Data", "Tipo"
@@ -122,6 +119,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(3).setMinWidth(150);
+            jTable1.getColumnModel().getColumn(3).setMaxWidth(150);
+        }
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Receitas", "Despesas" }));
 
