@@ -2,12 +2,14 @@ package model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 public class ControleLancamento {
 
@@ -32,16 +34,41 @@ public class ControleLancamento {
                 }
             }
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(ControleLancamento.class.getName()).log(Level.SEVERE, null, ex);
+            throw new IllegalArgumentException("Arquivo Não Encontrado.");
         }
         
         return listaLancamentos;
     }
 
     public void addListaLancamentos(Lancamento l){
+        String[] texto = new String[4];
+        
+        if (l instanceof Receita){
+            texto[0] = "RECEITA";
+            texto[1] = ((Receita)l).getTipoReceita().name();
+            texto[2] = l.getDataLancamento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            texto[3] = String.valueOf(l.getValor());
+        }
+        
+        if (l instanceof Despesa){
+            texto[0] = "DESPESA";
+            texto[1] = ((Despesa)l).getTipoDespesa().name();
+            texto[2] = l.getDataLancamento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            texto[3] = String.valueOf(l.getValor());
+        }
         
         
-        
+        File arquivo = new File("trabalho.csv");
+        try(FileOutputStream fos = new FileOutputStream(arquivo, true)){
+            
+            PrintWriter arquivoTexto = new PrintWriter(fos);
+            arquivoTexto.println(texto[0] + ";" + texto[1] + ";" + texto[2] + ";" + texto[3]);
+            
+        } catch (FileNotFoundException ex) {
+            throw new IllegalArgumentException("Arquivo Não Encontrado.");
+        } catch (IOException ex) {
+            throw new IllegalArgumentException("Erro ao fazer a escrita do arquivo.");
+        }
     }
 
     public double calcularSaldo(){
