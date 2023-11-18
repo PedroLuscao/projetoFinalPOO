@@ -7,6 +7,7 @@ package view;
 import java.awt.Container;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import model.ControleLancamento;
 import model.Receita;
 import model.TipoReceita;
 
@@ -154,15 +155,17 @@ public class CadastroReceita extends javax.swing.JDialog {
     }//GEN-LAST:event_txtValorKeyTyped
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        TipoReceita tipoReceita = cmbTipoReceita.getPrototypeDisplayValue();
+        TipoReceita tipoReceita = (TipoReceita) cmbTipoReceita.getSelectedItem();
         double valor = Double.parseDouble(txtValor.getText());
         LocalDate data = txtData.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        System.out.println(data);
         Receita receita = new Receita(valor, data, tipoReceita);
+        ControleLancamento.addListaLancamentos(receita);
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        this.setEnabled(false);
+        this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**

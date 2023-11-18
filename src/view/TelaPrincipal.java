@@ -32,7 +32,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
         ControleLancamento control = new ControleLancamento();
         ArrayList<Lancamento> lista = control.getListaLancamentos();
         
+        
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
         Object rowData[] = new Object[4];
         for(int i = 0; i < lista.size(); i++){
             if (lista.get(i) instanceof Receita){

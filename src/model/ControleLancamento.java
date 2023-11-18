@@ -40,7 +40,7 @@ public class ControleLancamento {
         return listaLancamentos;
     }
 
-    public void addListaLancamentos(Lancamento l){
+    public static void addListaLancamentos(Lancamento l){
         String[] texto = new String[4];
         
         if (l instanceof Receita){
