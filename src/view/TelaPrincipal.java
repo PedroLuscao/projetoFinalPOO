@@ -209,6 +209,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void btnAddLancamentoActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         new EscolherOrigem(this, true).setVisible(true);
+        atualizarTabela();
     }                                                
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
