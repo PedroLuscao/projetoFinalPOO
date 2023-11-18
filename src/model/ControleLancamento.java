@@ -59,9 +59,8 @@ public class ControleLancamento {
         
         
         File arquivo = new File("trabalho.csv");
-        try(FileOutputStream fos = new FileOutputStream(arquivo, true)){
+        try(FileOutputStream fos = new FileOutputStream(arquivo, true);PrintWriter arquivoTexto = new PrintWriter(fos)){
             
-            PrintWriter arquivoTexto = new PrintWriter(fos);
             arquivoTexto.println(texto[0] + ";" + texto[1] + ";" + texto[2] + ";" + texto[3]);
             
         } catch (FileNotFoundException ex) {
