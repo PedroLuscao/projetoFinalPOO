@@ -17,7 +17,7 @@ public class ControleLancamento {
 
     }
 
-    public ArrayList<Lancamento> getListaLancamentos() {
+    public static ArrayList<Lancamento> getListaLancamentos() {
         ArrayList<Lancamento> listaLancamentos = new ArrayList<>();
         
         try(Scanner lancamentosTexto = new Scanner (new File("trabalho.csv"), "UTF-8")){
@@ -70,7 +70,7 @@ public class ControleLancamento {
         }
     }
 
-    public double calcularSaldo(){
+    public static double calcularSaldo(){
         double total = 0;
         
         for (Lancamento l : getListaLancamentos()){
@@ -86,15 +86,15 @@ public class ControleLancamento {
         return total;
     }
 
-    public double calcularSaldoAteHj(){
+    public static double calcularSaldoAteHj(){
         double total = 0;
         
         for (Lancamento l : getListaLancamentos()){
-            if (l instanceof Receita && l.getDataLancamento().isBefore(LocalDate.now())){
+            if (l instanceof Receita && (l.getDataLancamento().isBefore(LocalDate.now()) || l.getDataLancamento().isEqual(LocalDate.now()))){
                 total += l.getValor();
             }
             
-            if (l instanceof Despesa && l.getDataLancamento().isBefore(LocalDate.now())){
+            if (l instanceof Despesa && (l.getDataLancamento().isBefore(LocalDate.now()) || l.getDataLancamento().isEqual(LocalDate.now()))){
                 total -= l.getValor();
             }
         }

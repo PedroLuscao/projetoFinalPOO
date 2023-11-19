@@ -4,8 +4,8 @@
  */
 package view;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.ControleLancamento;
 import model.Despesa;
@@ -21,7 +21,7 @@ import model.TipoReceita;
 public class TelaPrincipal extends javax.swing.JFrame {
 
     /**
-     * Creates new form TelaPrincipal
+     * Creates new form TelaPrincipal2
      */
     public TelaPrincipal() {
         initComponents();
@@ -29,10 +29,88 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
     
     public void atualizarTabela(){
-        ControleLancamento control = new ControleLancamento();
-        ArrayList<Lancamento> lista = control.getListaLancamentos();
+        String filtro = (String) cmbFiltroOrigem.getSelectedItem();
+        if(filtro.equals("Todos")){
+            listarAmbos();
+            cmbFiltroDespesa.setEnabled(false);
+            cmbFiltroReceita.setEnabled(false);
+        } else if (filtro.equals("Receitas")){
+            listarReceitas();
+            cmbFiltroReceita.setEnabled(true);
+            cmbFiltroDespesa.setEnabled(false);
+        } else if (filtro.equals("Despesas")){
+            listarDespesas();
+            cmbFiltroDespesa.setEnabled(true);
+            cmbFiltroReceita.setEnabled(false);
+        }
+    }
+    
+    private void listarDespesas(){
+        ArrayList<Lancamento> lista = ControleLancamento.getListaLancamentos();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        TipoDespesa filtro = null;
+        if(cmbFiltroDespesa.isEnabled()){
+            filtro = (TipoDespesa) cmbFiltroDespesa.getSelectedItem();
+        }
+        model.setRowCount(0);
+        Object rowData[] = new Object[4];
+        for(int i = 0; i < lista.size(); i++){
+            if (lista.get(i) instanceof Despesa){
+                if (cmbFiltroDespesa.isEnabled()){
+                    if(((Despesa) lista.get(i)).getTipoDespesa()== filtro){
+                        rowData[0] = "Despesa";
+                        rowData[1] = lista.get(i).getValor();
+                        rowData[2] = lista.get(i).getDataLancamento();
+                        rowData[3] = ((Despesa) lista.get(i)).getTipoDespesa();
+                        model.addRow(rowData);
+                    }
+                } else {
+                    rowData[0] = "Despesa";
+                    rowData[1] = lista.get(i).getValor();
+                    rowData[2] = lista.get(i).getDataLancamento();
+                    rowData[3] = ((Despesa) lista.get(i)).getTipoDespesa();
+                    model.addRow(rowData);
+                }
+            }
+        }
+    }
+    
+    private void listarReceitas(){
+        ArrayList<Lancamento> lista = ControleLancamento.getListaLancamentos();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        TipoReceita filtro = null;
+        if(cmbFiltroReceita.isEnabled()){
+            filtro = (TipoReceita) cmbFiltroReceita.getSelectedItem();
+        }
+        System.out.println(filtro);
+        model.setRowCount(0);
+        Object rowData[] = new Object[4];
+        for(int i = 0; i < lista.size(); i++){   
+            if (lista.get(i) instanceof Receita){
+                if(cmbFiltroReceita.isEnabled()){  
+                    if(((Receita) lista.get(i)).getTipoReceita() == filtro){
+                        rowData[0] = "Receita";
+                        rowData[1] = lista.get(i).getValor();
+                        rowData[2] = lista.get(i).getDataLancamento();
+                        rowData[3] = ((Receita) lista.get(i)).getTipoReceita();
+                        model.addRow(rowData);
+                    }
+                } else {
+                    rowData[0] = "Receita";
+                    rowData[1] = lista.get(i).getValor();
+                    rowData[2] = lista.get(i).getDataLancamento();
+                    rowData[3] = ((Receita) lista.get(i)).getTipoReceita();
+                    model.addRow(rowData);
+                }
+            }
+        }
+
+    }
         
-        
+    
+    
+    private void listarAmbos(){
+        ArrayList<Lancamento> lista = ControleLancamento.getListaLancamentos();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
         Object rowData[] = new Object[4];
@@ -43,7 +121,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 rowData[2] = lista.get(i).getDataLancamento();
                 rowData[3] = ((Receita) lista.get(i)).getTipoReceita();
             }
-            if (control.getListaLancamentos().get(i) instanceof Despesa){
+            if (lista.get(i) instanceof Despesa){
                 rowData[0] = "Despesa";
                 rowData[1] = lista.get(i).getValor();
                 rowData[2] = lista.get(i).getDataLancamento();
@@ -59,20 +137,24 @@ public class TelaPrincipal extends javax.swing.JFrame {
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        btnAddLancamento = new javax.swing.JButton();
-        btnRemoveLancamento = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        cmbFiltroOrigem = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        btnCheckSaldoAteHoje = new javax.swing.JButton();
+        btnChegarSaldoAteHoje = new javax.swing.JButton();
+        btnRemoveLancamento = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnAddLancamento = new javax.swing.JButton();
+        btnPesquisar = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        cmbFiltroDespesa = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        cmbFiltroReceita = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -80,15 +162,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Controle de Receitas e Despesas");
 
-        btnAddLancamento.setText("Adicionar Lançamento");
-        btnAddLancamento.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddLancamentoActionPerformed(evt);
-            }
-        });
+        jLabel2.setText("Origem de Lançamento");
 
-        btnRemoveLancamento.setEnabled(false);
-        btnRemoveLancamento.setText("Remover Lançamento");
+        cmbFiltroOrigem.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Receitas", "Despesas" }));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -119,7 +195,27 @@ public class TelaPrincipal extends javax.swing.JFrame {
             jTable1.getColumnModel().getColumn(3).setMaxWidth(150);
         }
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Receitas", "Despesas" }));
+        btnCheckSaldoAteHoje.setText("Checar Saldo até Hoje");
+        btnCheckSaldoAteHoje.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCheckSaldoAteHojeActionPerformed(evt);
+            }
+        });
+
+        btnChegarSaldoAteHoje.setText("Checar Saldo Total");
+        btnChegarSaldoAteHoje.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChegarSaldoAteHojeActionPerformed(evt);
+            }
+        });
+
+        btnRemoveLancamento.setEnabled(false);
+        btnRemoveLancamento.setText("Remover Lançamento");
+        btnRemoveLancamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveLancamentoActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Editar Lançamento");
         jButton1.setEnabled(false);
@@ -129,98 +225,139 @@ public class TelaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Tipo de Lançamento");
-
-        jButton2.setText("Checar Saldo Total");
-        jButton2.setMaximumSize(new java.awt.Dimension(143, 23));
-        jButton2.setMinimumSize(new java.awt.Dimension(143, 23));
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnAddLancamento.setText("Adicionar Lançamento");
+        btnAddLancamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnAddLancamentoActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Checar Saldo até Hoje");
+        btnPesquisar.setText("Pesquisar");
+        btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPesquisarActionPerformed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        jLabel3.setText("Tipo Despesa");
+
+        cmbFiltroDespesa.setModel(new javax.swing.DefaultComboBoxModel<>(TipoDespesa.values()));
+        cmbFiltroDespesa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbFiltroDespesaActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Tipo Receita");
+
+        cmbFiltroReceita.setModel(new javax.swing.DefaultComboBoxModel<>(TipoReceita.values()));
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnAddLancamento)
-                .addGap(39, 39, 39)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnRemoveLancamento)
-                .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addGap(29, 29, 29)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(33, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3)
-                .addGap(27, 27, 27)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(94, 94, 94))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 640, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(cmbFiltroOrigem, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(cmbFiltroDespesa, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(cmbFiltroReceita, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnPesquisar)))
+                .addContainerGap(36, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnAddLancamento)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 139, Short.MAX_VALUE)
+                        .addComponent(jButton1)
+                        .addGap(129, 129, 129)
+                        .addComponent(btnRemoveLancamento))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(158, 158, 158)
+                        .addComponent(btnCheckSaldoAteHoje)
+                        .addGap(117, 117, 117)
+                        .addComponent(btnChegarSaldoAteHoje, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cmbFiltroOrigem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnPesquisar)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbFiltroDespesa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbFiltroReceita, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnChegarSaldoAteHoje)
+                    .addComponent(btnCheckSaldoAteHoje))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAddLancamento)
                     .addComponent(btnRemoveLancamento)
                     .addComponent(jButton1))
                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-
         pack();
-    }// </editor-fold>                        
+    }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAddLancamentoActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+    private void btnChegarSaldoAteHojeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChegarSaldoAteHojeActionPerformed
+        JOptionPane.showMessageDialog(null,"Seu saldo total é " + String.format("%1$,.2f", ControleLancamento.calcularSaldo()));
+    }//GEN-LAST:event_btnChegarSaldoAteHojeActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnAddLancamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddLancamentoActionPerformed
         new EscolherOrigem(this, true).setVisible(true);
         atualizarTabela();
-    }                                                
+    }//GEN-LAST:event_btnAddLancamentoActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    private void btnRemoveLancamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveLancamentoActionPerformed
         // TODO add your handling code here:
-    }                                        
+    }//GEN-LAST:event_btnRemoveLancamentoActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    private void btnCheckSaldoAteHojeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckSaldoAteHojeActionPerformed
+        JOptionPane.showMessageDialog(null,"Seu saldo até hoje é " + String.format("%1$,.2f", ControleLancamento.calcularSaldoAteHj()));
+    }//GEN-LAST:event_btnCheckSaldoAteHojeActionPerformed
+
+    private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
+        atualizarTabela();
+    }//GEN-LAST:event_btnPesquisarActionPerformed
+
+    private void cmbFiltroDespesaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbFiltroDespesaActionPerformed
         // TODO add your handling code here:
-    }                                        
+    }//GEN-LAST:event_cmbFiltroDespesaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -248,6 +385,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(TelaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -257,17 +395,21 @@ public class TelaPrincipal extends javax.swing.JFrame {
         });
     }
 
-    // Variables declaration - do not modify                     
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddLancamento;
+    private javax.swing.JButton btnCheckSaldoAteHoje;
+    private javax.swing.JButton btnChegarSaldoAteHoje;
+    private javax.swing.JButton btnPesquisar;
     private javax.swing.JButton btnRemoveLancamento;
+    private javax.swing.JComboBox<TipoDespesa> cmbFiltroDespesa;
+    private javax.swing.JComboBox<String> cmbFiltroOrigem;
+    private javax.swing.JComboBox<TipoReceita> cmbFiltroReceita;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    // End of variables declaration                   
+    // End of variables declaration//GEN-END:variables
 }
