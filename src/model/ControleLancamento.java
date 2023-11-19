@@ -85,6 +85,22 @@ public class ControleLancamento {
         
         return total;
     }
+    
+    public static double calcularSaldoAcumulado(LocalDate data){
+        double total = 0;
+        
+        for (Lancamento l : getListaLancamentos()){
+            if (l instanceof Receita && (l.getDataLancamento().isBefore(data) || l.getDataLancamento().isEqual(data))){
+                total += l.getValor();
+            }
+            
+            if (l instanceof Despesa && (l.getDataLancamento().isBefore(data) || l.getDataLancamento().isEqual(data))){
+                total -= l.getValor();
+            }
+        }
+        
+        return total;
+    }
 
     public static double calcularSaldoAteHj(){
         double total = 0;

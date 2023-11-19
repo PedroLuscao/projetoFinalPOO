@@ -5,6 +5,9 @@
 package view;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.ControleLancamento;
@@ -47,28 +50,31 @@ public class TelaPrincipal extends javax.swing.JFrame {
     
     private void listarDespesas(){
         ArrayList<Lancamento> lista = ControleLancamento.getListaLancamentos();
+        Collections.sort(lista, Comparator.comparing(Lancamento::getDataLancamento).reversed());
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         TipoDespesa filtro = null;
         if(cmbFiltroDespesa.isEnabled()){
             filtro = (TipoDespesa) cmbFiltroDespesa.getSelectedItem();
         }
         model.setRowCount(0);
-        Object rowData[] = new Object[4];
+        Object rowData[] = new Object[5];
         for(int i = 0; i < lista.size(); i++){
             if (lista.get(i) instanceof Despesa){
                 if (cmbFiltroDespesa.isEnabled()){
                     if(((Despesa) lista.get(i)).getTipoDespesa()== filtro){
                         rowData[0] = "Despesa";
                         rowData[1] = lista.get(i).getValor();
-                        rowData[2] = lista.get(i).getDataLancamento();
-                        rowData[3] = ((Despesa) lista.get(i)).getTipoDespesa();
+                        rowData[2] = ControleLancamento.calcularSaldoAcumulado(lista.get(i).getDataLancamento());
+                        rowData[3] = lista.get(i).getDataLancamento();
+                        rowData[4] = ((Despesa) lista.get(i)).getTipoDespesa();                 
                         model.addRow(rowData);
                     }
                 } else {
                     rowData[0] = "Despesa";
                     rowData[1] = lista.get(i).getValor();
-                    rowData[2] = lista.get(i).getDataLancamento();
-                    rowData[3] = ((Despesa) lista.get(i)).getTipoDespesa();
+                    rowData[2] = ControleLancamento.calcularSaldoAcumulado(lista.get(i).getDataLancamento());
+                    rowData[3] = lista.get(i).getDataLancamento();                    
+                    rowData[4] = ((Despesa) lista.get(i)).getTipoDespesa();
                     model.addRow(rowData);
                 }
             }
@@ -77,6 +83,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     
     private void listarReceitas(){
         ArrayList<Lancamento> lista = ControleLancamento.getListaLancamentos();
+        Collections.sort(lista, Comparator.comparing(Lancamento::getDataLancamento).reversed());
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         TipoReceita filtro = null;
         if(cmbFiltroReceita.isEnabled()){
@@ -84,48 +91,51 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
         System.out.println(filtro);
         model.setRowCount(0);
-        Object rowData[] = new Object[4];
+        Object rowData[] = new Object[5];
         for(int i = 0; i < lista.size(); i++){   
             if (lista.get(i) instanceof Receita){
                 if(cmbFiltroReceita.isEnabled()){  
                     if(((Receita) lista.get(i)).getTipoReceita() == filtro){
                         rowData[0] = "Receita";
                         rowData[1] = lista.get(i).getValor();
-                        rowData[2] = lista.get(i).getDataLancamento();
-                        rowData[3] = ((Receita) lista.get(i)).getTipoReceita();
+                        rowData[2] = ControleLancamento.calcularSaldoAcumulado(lista.get(i).getDataLancamento());
+                        rowData[3] = lista.get(i).getDataLancamento();
+                        rowData[4] = ((Receita) lista.get(i)).getTipoReceita();
                         model.addRow(rowData);
                     }
                 } else {
                     rowData[0] = "Receita";
                     rowData[1] = lista.get(i).getValor();
-                    rowData[2] = lista.get(i).getDataLancamento();
-                    rowData[3] = ((Receita) lista.get(i)).getTipoReceita();
+                    rowData[2] = ControleLancamento.calcularSaldoAcumulado(lista.get(i).getDataLancamento());
+                    rowData[3] = lista.get(i).getDataLancamento();
+                    rowData[4] = ((Receita) lista.get(i)).getTipoReceita();
                     model.addRow(rowData);
                 }
             }
         }
 
     }
-        
-    
-    
+ 
     private void listarAmbos(){
         ArrayList<Lancamento> lista = ControleLancamento.getListaLancamentos();
+        Collections.sort(lista, Comparator.comparing(Lancamento::getDataLancamento).reversed());
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
-        Object rowData[] = new Object[4];
+        Object rowData[] = new Object[5];
         for(int i = 0; i < lista.size(); i++){
             if (lista.get(i) instanceof Receita){
                 rowData[0] = "Receita";
                 rowData[1] = lista.get(i).getValor();
-                rowData[2] = lista.get(i).getDataLancamento();
-                rowData[3] = ((Receita) lista.get(i)).getTipoReceita();
+                rowData[2] = ControleLancamento.calcularSaldoAcumulado(lista.get(i).getDataLancamento());
+                rowData[3] = lista.get(i).getDataLancamento();
+                rowData[4] = ((Receita) lista.get(i)).getTipoReceita();
             }
             if (lista.get(i) instanceof Despesa){
                 rowData[0] = "Despesa";
                 rowData[1] = lista.get(i).getValor();
-                rowData[2] = lista.get(i).getDataLancamento();
-                rowData[3] = ((Despesa) lista.get(i)).getTipoDespesa();
+                rowData[2] = ControleLancamento.calcularSaldoAcumulado(lista.get(i).getDataLancamento());
+                rowData[3] = lista.get(i).getDataLancamento();
+                rowData[4] = ((Despesa) lista.get(i)).getTipoDespesa();
             }
             model.addRow(rowData);
         }
@@ -171,14 +181,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Origem", "Valor", "Data", "Tipo"
+                "Origem", "Valor", "Saldo Acum", "Data", "Tipo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Double.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.String.class, java.lang.Double.class, java.lang.Double.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                true, false, false, true
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -191,8 +201,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(3).setMinWidth(150);
-            jTable1.getColumnModel().getColumn(3).setMaxWidth(150);
+            jTable1.getColumnModel().getColumn(4).setMinWidth(150);
+            jTable1.getColumnModel().getColumn(4).setMaxWidth(150);
         }
 
         btnCheckSaldoAteHoje.setText("Checar Saldo até Hoje");

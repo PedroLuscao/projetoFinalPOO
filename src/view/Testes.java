@@ -5,6 +5,7 @@
 package view;
 
 import java.time.LocalDate;
+import java.time.Month;
 import model.ControleLancamento;
 import model.Receita;
 import model.TipoDespesa;
@@ -16,9 +17,6 @@ import model.TipoReceita;
  */
 public class Testes {
     public static void main(String[] args) {
-        ControleLancamento control = new ControleLancamento();
-        Receita receita = new Receita(200.0, LocalDate.now(), TipoReceita.OUTRAS_RECEITAS);
-        
-        control.addListaLancamentos(receita);
+        System.out.println(ControleLancamento.calcularSaldoAcumulado(LocalDate.of(2023, Month.SEPTEMBER, 30))+"");
     }
 }
