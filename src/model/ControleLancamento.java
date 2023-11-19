@@ -10,13 +10,26 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Classe responsavel por controlar os lancamentos, sendo adicionar eles ao arquivo, fazer a leitura do arquivo, calcular o saldo da conta,
+ * calcular o saldo da conta ate hj, e calcular o saldo ate aquele lancamento especifico.
+ * @author Felipe
+ */
 
 public class ControleLancamento {
 
+    /**
+     * Construtor responsavel para criar uma instancia de Controle de Lancamento.
+     */
+    
     public ControleLancamento() {
 
     }
 
+    /**
+     * Metodo responsavel para fazer a leitura do arquivo CSV
+     * @return Retorna uma lista com o tipo, o valor, e a data do lancamento.
+     */
     public static ArrayList<Lancamento> getListaLancamentos() {
         ArrayList<Lancamento> listaLancamentos = new ArrayList<>();
         
@@ -41,6 +54,11 @@ public class ControleLancamento {
         return listaLancamentos;
     }
 
+    /**
+     * Metodo responsavel para adicionar um objeto do tipo lancamento no arquivo, esvrendo ele no arquivo com os seus atributos especificos.
+     * @param l Parametro do tipo lancamento, que vai ser adicionado ao arquivo.
+     */
+    
     public static void addListaLancamentos(Lancamento l){
         String[] texto = new String[4];
         
@@ -71,6 +89,11 @@ public class ControleLancamento {
         }
     }
 
+    
+    /**
+     * Metodo responsavel para calcular o saldo da conta, somando as receitas e subtraindo as despesas do valor final.
+     * @return Retorna o saldo total da conta
+     */
     public static double calcularSaldo(){
         double total = 0;
         
@@ -86,6 +109,12 @@ public class ControleLancamento {
         
         return total;
     }
+    
+    /**
+     * Metodo responsavel para calcular o saldo acumulado ate a data especificada, assim fazendo a atualizacao constante do saldo a cada lancamento feito.
+     * @param data Paremetro que sera passado para verificar todos os saldos antes da data passada no parametro.
+     * @return Retorna o valor do saldo ate a data especificada.
+     */
     
     public static double calcularSaldoAcumulado(LocalDate data){
         double total = 0;
@@ -103,6 +132,11 @@ public class ControleLancamento {
         return total;
     }
 
+    
+    /**
+     * Metodo responsavel para calcular o saldo da conta ate o dia de hoje, fazendo verificacoes das datas dos lancamentos.
+     * @return Retorna o calculo do saldo ate a data de hoje
+     */
     public static double calcularSaldoAteHj(){
         double total = 0;
         
