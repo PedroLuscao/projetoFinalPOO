@@ -6,7 +6,7 @@ public class Despesa extends Lancamento{
     
     private TipoDespesa tipoDespesa;
 
-    public Despesa(Double valor, LocalDate dataLancamento, TipoDespesa tipoDespesa) {
+    public Despesa(double valor, LocalDate dataLancamento, TipoDespesa tipoDespesa) {
         super(valor, dataLancamento);
         setTipoDespesa(tipoDespesa);
     }

@@ -5,9 +5,9 @@ import java.time.LocalDate;
 public abstract class Lancamento {
     
     private LocalDate dataLancamento;
-    private Double valor;
+    private double valor;
 
-    public Lancamento(Double valor, LocalDate dataLancamento) {
+    public Lancamento(double valor, LocalDate dataLancamento) {
         setDataLancamento(dataLancamento);
         setValor(valor);
     }
@@ -18,10 +18,10 @@ public abstract class Lancamento {
     public void setDataLancamento(LocalDate dataLancamento) {
         this.dataLancamento = dataLancamento;
     }
-    public Double getValor() {
+    public double getValor() {
         return valor;
     }
-    public void setValor(Double valor) {
+    public void setValor(double valor) {
         this.valor = valor;
     }
 
