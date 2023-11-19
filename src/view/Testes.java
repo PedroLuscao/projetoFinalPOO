@@ -6,7 +6,9 @@ package view;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import model.ControleLancamento;
+import model.Lancamento;
 import model.Receita;
 import model.TipoDespesa;
 import model.TipoReceita;
@@ -17,6 +19,8 @@ import model.TipoReceita;
  */
 public class Testes {
     public static void main(String[] args) {
-        System.out.println(ControleLancamento.calcularSaldoAcumulado(LocalDate.of(2023, Month.SEPTEMBER, 30))+"");
+        ArrayList<Lancamento> lista = ControleLancamento.getListaLancamentos();
+        
+        System.out.println(lista);
     }
 }

@@ -26,7 +26,8 @@ public class ControleLancamento {
                 String textoCompleto = lancamentosTexto.nextLine();
                 String[] split = textoCompleto.split(";");
                 if(split[0].equals("RECEITA")){
-                    listaLancamentos.add(new Receita(Double.parseDouble(split[3]), LocalDate.parse(split[2], DateTimeFormatter.ofPattern("dd/MM/yyyy")), TipoReceita.valueOf(split[1])));
+                    Receita r = new Receita(Double.parseDouble(split[3]), LocalDate.parse(split[2], DateTimeFormatter.ofPattern("dd/MM/yyyy")), TipoReceita.valueOf(split[1]));
+                    listaLancamentos.add(r);
                 }
                 
                 if(split[0].equals("DESPESA")){
