@@ -7,7 +7,7 @@ public class Receita extends Lancamento{
     private TipoReceita tipoReceita;
     private double valor;
 
-    public Receita(Double valor, LocalDate dataLancamento, TipoReceita tipoReceita) {
+    public Receita(double valor, LocalDate dataLancamento, TipoReceita tipoReceita) {
         super(valor, dataLancamento);
         this.tipoReceita = tipoReceita;
     }
