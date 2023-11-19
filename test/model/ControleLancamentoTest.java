@@ -7,6 +7,7 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 import org.junit.After;
 import org.junit.Test;
@@ -34,7 +35,7 @@ public class ControleLancamentoTest {
    
     private void limparArquivo() {
         try (PrintWriter writer = new PrintWriter("trabalho.csv")) {
-            writer.print("Categoria;Tipo;Data;Valor");
+            writer.print("Categoria;Tipo;Data;Valor\n");
         } catch (FileNotFoundException e) {
             
         }
@@ -57,15 +58,19 @@ public class ControleLancamentoTest {
     @Test(expected=IllegalArgumentException.class)
     public void testAddReceitaValorNegativo() throws Exception{
         Receita r = new Receita(-100.00, LocalDate.now(), TipoReceita.OUTRAS_RECEITAS);
-        
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testAddDespesaValorNegativo() throws Exception{
+        Despesa d = new Despesa(-100.00, LocalDate.now(), TipoDespesa.ALIMENTACAO);
     }
     
     @Test(expected=DateTimeException.class)
     public void testAddReceitaDataErrada() throws Exception{
-        Receita r = new Receita(-100.00, LocalDate.of(2023, 15, 06), TipoReceita.OUTRAS_RECEITAS);
+        Receita r = new Receita(100.00, LocalDate.of(2023, 15, 06), TipoReceita.OUTRAS_RECEITAS);
     }
     
-     private String lerConteudoDoArquivo() {
+    private String lerConteudoDoArquivo() {
         try (Scanner scanner = new Scanner(new File("trabalho.csv"))) {
             StringBuilder conteudo = new StringBuilder();
             while (scanner.hasNextLine()) {
@@ -73,8 +78,58 @@ public class ControleLancamentoTest {
             }
             return conteudo.toString();
         } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException("Arquivo NÃ£o Encontrado.");
+            throw new IllegalArgumentException("Arquivo nao Encontrado.");
         }
+    }
+    
+    @Test
+    public void calcularSaldoAddReceita(){
+        Receita r = new Receita(100.00, LocalDate.of(2023, 12, 06), TipoReceita.OUTRAS_RECEITAS);
+        ControleLancamento.addListaLancamentos(r);
+        assertEquals(100.0, ControleLancamento.calcularSaldo(),0.001);
+    }
+    
+    @Test
+    public void calcularSaldoAddDespesa(){
+        Despesa d = new Despesa(1000.00, LocalDate.of(2023, 12, 06), TipoDespesa.ALIMENTACAO);
+        ControleLancamento.addListaLancamentos(d);
+        assertEquals(-1000.0, ControleLancamento.calcularSaldo(),0.001);
+    }
+    
+    @Test
+    public void calcularSaldoAddDespesaReceita(){
+        Despesa d = new Despesa(1000.00, LocalDate.of(2023, 12, 06), TipoDespesa.ALIMENTACAO);
+        ControleLancamento.addListaLancamentos(d);
+        Receita r = new Receita(100.00, LocalDate.of(2023, 12, 06), TipoReceita.OUTRAS_RECEITAS);
+        ControleLancamento.addListaLancamentos(r);
+        assertEquals(-900.0, ControleLancamento.calcularSaldo(),0.001);
+    }
+    
+    @Test
+    public void calcularSaldoAteHojeReceita(){
+        Receita r = new Receita(100.00, LocalDate.of(2023, 9, 06), TipoReceita.OUTRAS_RECEITAS);
+        ControleLancamento.addListaLancamentos(r);
+        Receita r2 = new Receita(100.00, LocalDate.now().plusDays(5), TipoReceita.OUTRAS_RECEITAS);
+        ControleLancamento.addListaLancamentos(r2);
+        assertEquals(100, ControleLancamento.calcularSaldoAteHj(),0.001);
+    }
+    
+    @Test
+    public void calcularSaldoAteHojeDespesa(){
+        Despesa d = new Despesa(1000.00, LocalDate.of(2023, 9, 06), TipoDespesa.ALIMENTACAO);
+        ControleLancamento.addListaLancamentos(d);
+        Despesa d2 = new Despesa(1000.00, LocalDate.now().plusDays(5), TipoDespesa.ALIMENTACAO);
+        ControleLancamento.addListaLancamentos(d2);
+        assertEquals(-1000.0, ControleLancamento.calcularSaldoAteHj(),0.001);
+    }
+    
+    @Test
+    public void calcularSaldoAcum(){
+        Despesa d = new Despesa(500.00, LocalDate.of(2023, 9, 06), TipoDespesa.ALIMENTACAO);
+        ControleLancamento.addListaLancamentos(d);
+        Receita r = new Receita(100.00, LocalDate.now().plusDays(5), TipoReceita.OUTRAS_RECEITAS);
+        ControleLancamento.addListaLancamentos(r);
+        assertEquals(-500.0, ControleLancamento.calcularSaldoAcumulado(LocalDate.of(2023, Month.NOVEMBER, 19)),0.001);
     }
 
 }

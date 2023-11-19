@@ -22,6 +22,9 @@ public abstract class Lancamento {
         return valor;
     }
     public void setValor(double valor) {
+        if (valor <= 0){
+            throw new IllegalArgumentException("Valor negativo para receitas");
+        }
         this.valor = valor;
     }
 

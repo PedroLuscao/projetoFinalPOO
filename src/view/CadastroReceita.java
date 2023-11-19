@@ -7,6 +7,7 @@ package view;
 import java.awt.Container;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import javax.swing.JOptionPane;
 import model.ControleLancamento;
 import model.Receita;
 import model.TipoReceita;
@@ -97,12 +98,11 @@ public class CadastroReceita extends javax.swing.JDialog {
                 .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtData, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel4)
-                        .addComponent(cmbTipoReceita, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtValor, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
-                        .addComponent(jLabel2)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel4)
+                    .addComponent(cmbTipoReceita, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtValor, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -140,6 +140,7 @@ public class CadastroReceita extends javax.swing.JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtValorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtValorKeyTyped
@@ -155,13 +156,21 @@ public class CadastroReceita extends javax.swing.JDialog {
     }//GEN-LAST:event_txtValorKeyTyped
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        TipoReceita tipoReceita = (TipoReceita) cmbTipoReceita.getSelectedItem();
-        double valor = Double.parseDouble(txtValor.getText());
-        LocalDate data = txtData.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        System.out.println(data);
-        Receita receita = new Receita(valor, data, tipoReceita);
-        ControleLancamento.addListaLancamentos(receita);
-        this.setVisible(false);
+        try {
+            TipoReceita tipoReceita = (TipoReceita) cmbTipoReceita.getSelectedItem();
+            double valor = Double.parseDouble(txtValor.getText());
+            LocalDate data = txtData.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            System.out.println(data);
+            Receita receita = new Receita(valor, data, tipoReceita);
+            ControleLancamento.addListaLancamentos(receita);
+            this.setVisible(false);
+        } 
+        catch (NullPointerException ex){
+            JOptionPane.showMessageDialog(null, "A data selecionada não existe ou não está no formato correto (dd/mm/yyyy)");
+        }
+        catch (Exception ex){
+            JOptionPane.showMessageDialog(null, "Erro! Algo não deu certo!");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

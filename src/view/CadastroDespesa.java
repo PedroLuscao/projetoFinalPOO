@@ -7,6 +7,7 @@ package view;
 import java.awt.Container;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import javax.swing.JOptionPane;
 import model.ControleLancamento;
 import model.Despesa;
 import model.Receita;
@@ -52,7 +53,7 @@ public class CadastroDespesa extends javax.swing.JDialog {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Cadastro de Receita");
+        jLabel1.setText("Cadastro de Despesa");
 
         txtValor.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -141,6 +142,7 @@ public class CadastroDespesa extends javax.swing.JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtValorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtValorKeyTyped
@@ -156,13 +158,21 @@ public class CadastroDespesa extends javax.swing.JDialog {
     }//GEN-LAST:event_txtValorKeyTyped
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        TipoDespesa tipoDespesa = (TipoDespesa) cmbTipoDespesa.getSelectedItem();
-        double valor = Double.parseDouble(txtValor.getText());
-        LocalDate data = txtData.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        System.out.println(data);
-        Despesa despesa = new Despesa(valor, data, tipoDespesa);
-        ControleLancamento.addListaLancamentos(despesa);
-        this.setVisible(false);
+        try{
+            TipoDespesa tipoDespesa = (TipoDespesa) cmbTipoDespesa.getSelectedItem();
+            double valor = Double.parseDouble(txtValor.getText());
+            LocalDate data = txtData.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            System.out.println(data);
+            Despesa despesa = new Despesa(valor, data, tipoDespesa);
+            ControleLancamento.addListaLancamentos(despesa);
+            this.setVisible(false);
+        } 
+        catch (NullPointerException ex){
+            JOptionPane.showMessageDialog(null, "A data selecionada não existe ou não está no formato correto (dd/mm/yyyy)");
+        }
+        catch (Exception ex){
+            JOptionPane.showMessageDialog(null, "Erro! Algo não deu certo!");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
