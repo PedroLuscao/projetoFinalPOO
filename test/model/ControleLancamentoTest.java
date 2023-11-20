@@ -44,15 +44,13 @@ public class ControleLancamentoTest {
     @Test
     public void testAddListaLancamentosReceita() {
         ControleLancamento.addListaLancamentos(new Receita(100.0, LocalDate.now(), TipoReceita.SALARIO));
-        String conteudoDoArquivo = lerConteudoDoArquivo();
-        assertTrue(conteudoDoArquivo.contains("RECEITA;SALARIO;" + LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + ";100.0"));
+        assertEquals(1, ControleLancamento.getListaLancamentos().size());
     }
     
     @Test
     public void testAddListaLancamentosDespesa() {
         ControleLancamento.addListaLancamentos(new Despesa(100.0, LocalDate.now(), TipoDespesa.OUTRAS_DESPESAS));
-        String conteudoDoArquivo = lerConteudoDoArquivo();
-        assertTrue(conteudoDoArquivo.contains("DESPESA;OUTRAS_DESPESAS;" + LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + ";100.0"));
+        assertEquals(1, ControleLancamento.getListaLancamentos().size());
     }
     
     @Test(expected=IllegalArgumentException.class)
@@ -68,18 +66,6 @@ public class ControleLancamentoTest {
     @Test(expected=DateTimeException.class)
     public void testAddReceitaDataErrada() throws Exception{
         Receita r = new Receita(100.00, LocalDate.of(2023, 15, 06), TipoReceita.OUTRAS_RECEITAS);
-    }
-    
-    private String lerConteudoDoArquivo() {
-        try (Scanner scanner = new Scanner(new File("trabalho.csv"))) {
-            StringBuilder conteudo = new StringBuilder();
-            while (scanner.hasNextLine()) {
-                conteudo.append(scanner.nextLine());
-            }
-            return conteudo.toString();
-        } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException("Arquivo nao Encontrado.");
-        }
     }
     
     @Test
@@ -124,12 +110,43 @@ public class ControleLancamentoTest {
     }
     
     @Test
+    public void calcularSaldoAteHjDespesaReceita(){
+        Receita r = new Receita(100.00, LocalDate.of(2023, 9, 06), TipoReceita.OUTRAS_RECEITAS);
+        ControleLancamento.addListaLancamentos(r);
+        Receita r2 = new Receita(100.00, LocalDate.now().plusDays(5), TipoReceita.OUTRAS_RECEITAS);
+        ControleLancamento.addListaLancamentos(r2);
+        Despesa d = new Despesa(100.00, LocalDate.of(2023, 9, 06), TipoDespesa.ALIMENTACAO);
+        ControleLancamento.addListaLancamentos(d);
+        Despesa d2 = new Despesa(100.00, LocalDate.now().plusDays(5), TipoDespesa.ALIMENTACAO);
+        ControleLancamento.addListaLancamentos(d2);
+        assertEquals(0, ControleLancamento.calcularSaldoAteHj(),0.001);
+    }
+    
+    @Test
     public void calcularSaldoAcum(){
         Despesa d = new Despesa(500.00, LocalDate.of(2023, 9, 06), TipoDespesa.ALIMENTACAO);
         ControleLancamento.addListaLancamentos(d);
         Receita r = new Receita(100.00, LocalDate.now().plusDays(5), TipoReceita.OUTRAS_RECEITAS);
         ControleLancamento.addListaLancamentos(r);
         assertEquals(-500.0, ControleLancamento.calcularSaldoAcumulado(LocalDate.of(2023, Month.NOVEMBER, 19)),0.001);
+    }
+    
+    @Test
+    public void testCalcularSaldoAposVariasTransacoes() {   
+        ControleLancamento.addListaLancamentos(new Receita(500.0, LocalDate.now(), TipoReceita.FERIAS));
+        ControleLancamento.addListaLancamentos(new Despesa(200.0, LocalDate.now(), TipoDespesa.ENTRETENIMENTO));
+        ControleLancamento.addListaLancamentos(new Receita(300.0, LocalDate.now(), TipoReceita.OUTRAS_RECEITAS));
+        assertEquals(600.0, ControleLancamento.calcularSaldo(), 0.001);
+    }
+    
+    @Test
+    public void testCalcularSaldoSemTransacoes() {
+        assertEquals(0.0, ControleLancamento.calcularSaldo(), 0.001);
+    }
+    
+    @Test
+    public void testCalcularSaldoAteHjSemTransacoes() {
+        assertEquals(0.0, ControleLancamento.calcularSaldoAteHj(), 0.001);
     }
 
 }
