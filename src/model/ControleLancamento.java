@@ -56,24 +56,24 @@ public class ControleLancamento {
 
     /**
      * Metodo responsavel para adicionar um objeto do tipo lancamento no arquivo, esvrendo ele no arquivo com os seus atributos especificos.
-     * @param l Parametro do tipo lancamento, que vai ser adicionado ao arquivo.
+     * @param lancamento Parametro do tipo lancamento, que vai ser adicionado ao arquivo.
      */
     
-    public static void addListaLancamentos(Lancamento l){
+    public static void addListaLancamentos(Lancamento lancamento){
         String[] texto = new String[4];
         
-        if (l instanceof Receita){
+        if (lancamento instanceof Receita){
             texto[0] = "RECEITA";
-            texto[1] = ((Receita)l).getTipoReceita().name();
-            texto[2] = l.getDataLancamento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            texto[3] = String.valueOf(l.getValor());
+            texto[1] = ((Receita)lancamento).getTipoReceita().name();
+            texto[2] = lancamento.getDataLancamento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            texto[3] = String.valueOf(lancamento.getValor());
         }
         
-        if (l instanceof Despesa){
+        if (lancamento instanceof Despesa){
             texto[0] = "DESPESA";
-            texto[1] = ((Despesa)l).getTipoDespesa().name();
-            texto[2] = l.getDataLancamento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            texto[3] = String.valueOf(l.getValor());
+            texto[1] = ((Despesa)lancamento).getTipoDespesa().name();
+            texto[2] = lancamento.getDataLancamento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            texto[3] = String.valueOf(lancamento.getValor());
         }
         
         
