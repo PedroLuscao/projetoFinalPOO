@@ -1,14 +1,10 @@
 package model;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Scanner;
 import org.junit.After;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -140,6 +136,28 @@ public class ControleLancamentoTest {
     }
     
     @Test
+    public void testCalcularSaldoAteHjAposVariasTransacoes() {   
+        ControleLancamento.addListaLancamentos(new Receita(500.0, LocalDate.now(), TipoReceita.FERIAS));
+        ControleLancamento.addListaLancamentos(new Despesa(200.0, LocalDate.now(), TipoDespesa.ENTRETENIMENTO));
+        ControleLancamento.addListaLancamentos(new Receita(300.0, LocalDate.now(), TipoReceita.OUTRAS_RECEITAS));
+        ControleLancamento.addListaLancamentos(new Receita(500.0, LocalDate.now().plusDays(1), TipoReceita.FERIAS));
+        ControleLancamento.addListaLancamentos(new Despesa(200.0, LocalDate.now().plusDays(1), TipoDespesa.ENTRETENIMENTO));
+        ControleLancamento.addListaLancamentos(new Receita(300.0, LocalDate.now().plusDays(1), TipoReceita.OUTRAS_RECEITAS));
+        assertEquals(600.0, ControleLancamento.calcularSaldoAteHj(), 0.001);
+    }
+    
+    @Test
+    public void testCalcularSaldoAcumuladoAposVariasTransacoes() {   
+        ControleLancamento.addListaLancamentos(new Receita(100.0, LocalDate.of(2023,1,22), TipoReceita.FERIAS));
+        ControleLancamento.addListaLancamentos(new Despesa(200.0, LocalDate.of(2023,2,12), TipoDespesa.ENTRETENIMENTO));
+        ControleLancamento.addListaLancamentos(new Receita(300.0, LocalDate.of(2023,3,26), TipoReceita.OUTRAS_RECEITAS));
+        ControleLancamento.addListaLancamentos(new Receita(400.0, LocalDate.of(2023,4,11), TipoReceita.FERIAS));
+        ControleLancamento.addListaLancamentos(new Despesa(500.0, LocalDate.of(2023,5,3), TipoDespesa.ENTRETENIMENTO));
+        ControleLancamento.addListaLancamentos(new Receita(600.0, LocalDate.of(2023,6,24), TipoReceita.OUTRAS_RECEITAS));
+        assertEquals(100.0, ControleLancamento.calcularSaldoAcumulado(LocalDate.of(2023,5,3)), 0.001);
+    }
+    
+    @Test
     public void testCalcularSaldoSemTransacoes() {
         assertEquals(0.0, ControleLancamento.calcularSaldo(), 0.001);
     }
@@ -148,5 +166,35 @@ public class ControleLancamentoTest {
     public void testCalcularSaldoAteHjSemTransacoes() {
         assertEquals(0.0, ControleLancamento.calcularSaldoAteHj(), 0.001);
     }
-
+    
+    @Test
+    public void testAddListaLancamentosAposVariasDespesas() {   
+        ControleLancamento.addListaLancamentos(new Despesa(200.0, LocalDate.of(2023,2,12), TipoDespesa.ENTRETENIMENTO));
+        ControleLancamento.addListaLancamentos(new Despesa(500.0, LocalDate.of(2023,5,3), TipoDespesa.ALIMENTACAO));
+        ControleLancamento.addListaLancamentos(new Despesa(500.0, LocalDate.of(2023,5,3), TipoDespesa.RESIDENCIA));
+        ControleLancamento.addListaLancamentos(new Despesa(450.0, LocalDate.of(2023,5,3), TipoDespesa.SAUDE));
+        assertEquals(4, ControleLancamento.getListaLancamentos().size(), 0.001);
+    }
+    
+    @Test
+    public void testAddListaLancamentosAposVariasReceitas() {   
+        ControleLancamento.addListaLancamentos(new Receita(200.0, LocalDate.of(2023,2,12), TipoReceita.DECIMO_TERCEIRO));
+        ControleLancamento.addListaLancamentos(new Receita(500.0, LocalDate.of(2023,5,3), TipoReceita.FERIAS));
+        ControleLancamento.addListaLancamentos(new Receita(500.0, LocalDate.of(2023,5,3), TipoReceita.OUTRAS_RECEITAS));
+        ControleLancamento.addListaLancamentos(new Receita(450.0, LocalDate.of(2023,5,3), TipoReceita.SALARIO));
+        assertEquals(4, ControleLancamento.getListaLancamentos().size(), 0.001);
+    }
+    
+    @Test
+    public void testAddListaLancamentosAposVariosLancamentos() {   
+        ControleLancamento.addListaLancamentos(new Despesa(200.0, LocalDate.of(2023,2,12), TipoDespesa.ENTRETENIMENTO));
+        ControleLancamento.addListaLancamentos(new Despesa(500.0, LocalDate.of(2023,5,3), TipoDespesa.ALIMENTACAO));
+        ControleLancamento.addListaLancamentos(new Despesa(500.0, LocalDate.of(2023,5,3), TipoDespesa.RESIDENCIA));
+        ControleLancamento.addListaLancamentos(new Despesa(450.0, LocalDate.of(2023,5,3), TipoDespesa.SAUDE));
+        ControleLancamento.addListaLancamentos(new Receita(200.0, LocalDate.of(2023,2,12), TipoReceita.DECIMO_TERCEIRO));
+        ControleLancamento.addListaLancamentos(new Receita(500.0, LocalDate.of(2023,5,3), TipoReceita.FERIAS));
+        ControleLancamento.addListaLancamentos(new Receita(500.0, LocalDate.of(2023,5,3), TipoReceita.OUTRAS_RECEITAS));
+        ControleLancamento.addListaLancamentos(new Receita(450.0, LocalDate.of(2023,5,3), TipoReceita.SALARIO));
+        assertEquals(8, ControleLancamento.getListaLancamentos().size(), 0.001);
+    }
 }

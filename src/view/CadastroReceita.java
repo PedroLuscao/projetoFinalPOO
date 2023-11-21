@@ -160,7 +160,6 @@ public class CadastroReceita extends javax.swing.JDialog {
             TipoReceita tipoReceita = (TipoReceita) cmbTipoReceita.getSelectedItem();
             double valor = Double.parseDouble(txtValor.getText());
             LocalDate data = txtData.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            System.out.println(data);
             Receita receita = new Receita(valor, data, tipoReceita);
             ControleLancamento.addListaLancamentos(receita);
             this.setVisible(false);

@@ -162,7 +162,6 @@ public class CadastroDespesa extends javax.swing.JDialog {
             TipoDespesa tipoDespesa = (TipoDespesa) cmbTipoDespesa.getSelectedItem();
             double valor = Double.parseDouble(txtValor.getText());
             LocalDate data = txtData.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            System.out.println(data);
             Despesa despesa = new Despesa(valor, data, tipoDespesa);
             ControleLancamento.addListaLancamentos(despesa);
             this.setVisible(false);
